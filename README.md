@@ -1,5 +1,13 @@
 # GANonMobile
 
+### Introduction
+The rise of versatile GANs allows us to create incredible applications that catch everyone’s eyes, such as image inpainting, super-resolution, style transfer etc. However, GANs are almost twice as compute intensive, when compared to the state-of-the-art supervised learning models used in production today. On the other hand, in today’s mobile first world, consumers are increasingly using camera’s ability to make real time changes to their pictures (e.g. adding photo filters). This creates a strong need of making DNNs small and faster such that it can be deployed on resource limited devices. In this project, we focus on making the inference of GANs more efficient. Specifically, we want to reduce the number of parameters and operations in GANs. We use the compressed GANs to showcase the real-time speedup on multiple hardware endpoints, including CPU, GPU and Mobile CPU.
+
+### GAN Compression
+To allow realtime processing of GAN, we need to reduce the number of parameters and MAC operations in the original model. In the [GAN Compression paper](https://arxiv.org/abs/2003.08936). They combine channel pruning, neural architecture search (NAS) and knowledge distillation and successfully reduce the CycleGAN by more than 20x. We follow the their (procedure)[https://github.com/mit-han-lab/gan-compression/blob/master/docs/lite_pipeline.md] and perform model compression on horse2zebra dataset. The workflow can be summarized as the below diagram:
+
+![workflow](/figures/workflow.png)
+
 ### Mobile Deployment
 
 To convert the Pytorch model into mobile compatible format: we follow the tutorial [here](https://pytorch.org/mobile/android/).
@@ -11,7 +19,6 @@ The role of each files is explained below:
 * In Utils.java, we define functions to convert camera to the correct orientation. Since the image orientation will be affected by the phone orientation while taking the picture. We need to read the EXIF data from the image to get orientation.
 * In Classifier.java, we use the libtorch API to perform preprocessing and postprocessing of images. Since the output of the Mobile Torch model is restricted to 1D vector format. We need to first convert it into float array in Java. Then reshape the array and combine RGB channels to construct an bitmap file.
 * In Result.java, we receive the model prediction and latency and render it on the screen.
-
 
 ### Evaluation Result
 
